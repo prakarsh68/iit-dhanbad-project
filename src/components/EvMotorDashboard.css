@@ -1,0 +1,1065 @@
+/* ==========================================================================
+   EV MOTOR DIGITAL TWIN DASHBOARD - GLASSMORPHIC STYLING
+   ========================================================================== */
+
+:root {
+  --motor-bg: transparent; /* lets the app space background show through */
+  --motor-card-bg: rgba(17, 24, 39, 0.55);
+  --motor-border: rgba(255, 255, 255, 0.06);
+  --motor-border-glow: rgba(0, 247, 255, 0.15);
+  --motor-sidebar-bg: rgba(11, 15, 26, 0.7);
+  --motor-text-main: #f3f4f6;
+  --motor-text-muted: #9ca3af;
+  --motor-accent-red: #ff4757;
+  --motor-accent-blue: #00f7ff;
+  --motor-accent-green: #05f394;
+  --motor-accent-orange: #ff9f1c;
+}
+
+/* Main Layout Container */
+.motor-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 73px);
+  background-color: var(--motor-bg);
+  color: var(--motor-text-main);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Sidebar Styling - Frosted Glass */
+.motor-sidebar {
+  width: 270px;
+  background-color: var(--motor-sidebar-bg);
+  border-right: 1px solid var(--motor-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
+.motor-sidebar.collapsed {
+  width: 0;
+  padding: 28px 0;
+  overflow: hidden;
+  border-right: none;
+}
+
+/* Collapsible Toggle Trigger */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 16px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: #0b0f19;
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
+  box-shadow: 0 0 10px rgba(0, 247, 255, 0.2);
+  color: var(--motor-accent-blue);
+  transition: all 0.2s ease;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: var(--motor-accent-blue);
+  color: #030712;
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.motor-sidebar.collapsed .sidebar-toggle-btn {
+  right: -24px;
+  border-radius: 0 4px 4px 0;
+  width: 20px;
+  height: 36px;
+}
+
+/* Controls Header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: var(--motor-accent-blue);
+  border-bottom: 1px solid var(--motor-border);
+  padding-bottom: 12px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(0, 247, 255, 0.2);
+}
+
+/* Slider Controls */
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider-label {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--motor-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.slider-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--motor-accent-red);
+  font-family: var(--font-mono);
+  text-shadow: 0 0 8px rgba(255, 71, 87, 0.3);
+}
+
+.motor-range-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  outline: none;
+}
+
+.motor-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--motor-accent-red);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px rgba(255, 71, 87, 0.6);
+}
+
+.motor-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+  box-shadow: 0 0 15px rgba(255, 71, 87, 0.9);
+}
+
+.motor-range-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--motor-accent-red);
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px rgba(255, 71, 87, 0.6);
+}
+
+.motor-range-slider::-moz-range-thumb:hover {
+  transform: scale(1.25);
+  box-shadow: 0 0 15px rgba(255, 71, 87, 0.9);
+}
+
+/* Sidebar Buttons */
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.motor-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--motor-border);
+  border-radius: 6px;
+  color: var(--motor-text-main);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.motor-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.motor-btn:active {
+  transform: translateY(1px);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.motor-btn.btn-start {
+  color: var(--motor-accent-green);
+  border-color: rgba(5, 243, 148, 0.2);
+}
+.motor-btn.btn-start:hover {
+  background-color: rgba(5, 243, 148, 0.08);
+  border-color: var(--motor-accent-green);
+  box-shadow: 0 0 15px rgba(5, 243, 148, 0.25);
+}
+
+.motor-btn.btn-stop {
+  color: var(--motor-accent-red);
+  border-color: rgba(255, 71, 87, 0.2);
+}
+.motor-btn.btn-stop:hover {
+  background-color: rgba(255, 71, 87, 0.08);
+  border-color: var(--motor-accent-red);
+  box-shadow: 0 0 15px rgba(255, 71, 87, 0.25);
+}
+
+.motor-btn.btn-reset {
+  color: var(--motor-accent-blue);
+  border-color: rgba(0, 247, 255, 0.2);
+}
+.motor-btn.btn-reset:hover {
+  background-color: rgba(0, 247, 255, 0.08);
+  border-color: var(--motor-accent-blue);
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.25);
+}
+
+.motor-btn.btn-predict {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(0, 247, 255, 0.2);
+  color: #ffffff;
+}
+.motor-btn.btn-predict:hover {
+  background-color: rgba(0, 247, 255, 0.06);
+  border-color: var(--motor-accent-blue);
+  box-shadow: 0 0 18px rgba(0, 247, 255, 0.3);
+}
+
+/* Main Dashboard Panel */
+.motor-main {
+  flex-grow: 1;
+  padding: 36px 44px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  z-index: 10;
+}
+
+/* Page Header */
+.motor-dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-accent-icon {
+  color: var(--motor-accent-orange);
+  animation: glow-pulse 1.8s infinite alternate;
+}
+
+@keyframes glow-pulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255, 159, 28, 0.3)); }
+  100% { transform: scale(1.15); filter: drop-shadow(0 0 10px rgba(255, 159, 28, 0.8)); }
+}
+
+/* Section Wrapper - Glass Cards */
+.motor-section {
+  background: var(--motor-card-bg);
+  border: 1px solid var(--motor-border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.motor-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--motor-border-glow), transparent);
+}
+
+.motor-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--motor-accent-blue);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(0, 247, 255, 0.2);
+}
+
+.section-icon {
+  font-size: 1.1rem;
+}
+
+/* Core Metrics Grid Layout */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1200px) {
+  .metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual Metric Box */
+.metric-box {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.metric-box:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--motor-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* Temperatures and Health row styles */
+.temperatures-row, .health-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .temperatures-row, .health-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Custom Visual Interactive Gauge Component styles */
+.visual-gauge {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.gauge-track {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gauge-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px var(--glow-color);
+  background: var(--fill-gradient);
+}
+
+/* Status Banner */
+.motor-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.motor-status-banner.healthy {
+  background-color: rgba(5, 243, 148, 0.05);
+  border: 1px solid rgba(5, 243, 148, 0.2);
+  color: #a7f3d0;
+  text-shadow: 0 0 8px rgba(5, 243, 148, 0.2);
+}
+
+.motor-status-banner.warning {
+  background-color: rgba(255, 159, 28, 0.05);
+  border: 1px solid rgba(255, 159, 28, 0.2);
+  color: #fde68a;
+  text-shadow: 0 0 8px rgba(255, 159, 28, 0.2);
+}
+
+.motor-status-banner.critical {
+  background-color: rgba(255, 71, 87, 0.05);
+  border: 1px solid rgba(255, 71, 87, 0.2);
+  color: #fecdd3;
+  animation: alert-banner-pulse 1.5s infinite alternate;
+}
+
+@keyframes alert-banner-pulse {
+  0% { box-shadow: 0 0 10px rgba(255, 71, 87, 0.05); border-color: rgba(255, 71, 87, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(255, 71, 87, 0.2); border-color: rgba(255, 71, 87, 0.45); }
+}
+
+.status-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.healthy .status-indicator-dot {
+  background-color: var(--motor-accent-green);
+  box-shadow: 0 0 8px var(--motor-accent-green);
+}
+.healthy .status-indicator-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--motor-accent-green);
+  animation: pulse-ring 2s infinite linear;
+}
+
+.warning .status-indicator-dot {
+  background-color: var(--motor-accent-orange);
+  box-shadow: 0 0 8px var(--motor-accent-orange);
+}
+
+.critical .status-indicator-dot {
+  background-color: var(--motor-accent-red);
+  box-shadow: 0 0 8px var(--motor-accent-red);
+}
+.critical .status-indicator-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--motor-accent-red);
+  animation: pulse-ring 1s infinite linear;
+}
+
+/* AI Prediction Panel styling */
+.ai-prediction-panel {
+  background-color: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 20px 24px;
+  color: var(--motor-text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+}
+
+.ai-prediction-panel.scanning {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-color: rgba(0, 247, 255, 0.25);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-prediction-panel.ready {
+  background-color: rgba(11, 15, 26, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--motor-text-main);
+  display: block;
+}
+
+/* AI Prediction Scanning Loader styling */
+.scanning-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  z-index: 5;
+}
+
+.scanning-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--motor-accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.scanning-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--motor-accent-blue), transparent);
+  box-shadow: 0 0 12px var(--motor-accent-blue);
+  opacity: 0.6;
+  animation: scanning-vertical 2s linear infinite;
+}
+
+/* Diagnostic results styling */
+.ai-report {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ai-report-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--motor-accent-blue);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.ai-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .ai-report-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ai-report-item {
+  background: rgba(11, 15, 26, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.ai-report-item:hover {
+  background: rgba(11, 15, 26, 0.6);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.ai-item-title {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--motor-text-muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.ai-item-desc {
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+.ai-item-status {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.status-ok {
+  background-color: rgba(5, 243, 148, 0.08);
+  color: var(--motor-accent-green);
+  border: 1px solid rgba(5, 243, 148, 0.15);
+}
+
+.status-alert {
+  background-color: rgba(255, 71, 87, 0.08);
+  color: var(--motor-accent-red);
+  border: 1px solid rgba(255, 71, 87, 0.15);
+}
+
+.status-warning {
+  background-color: rgba(255, 159, 28, 0.08);
+  color: var(--motor-accent-orange);
+  border: 1px solid rgba(255, 159, 28, 0.15);
+}
+
+/* ==========================================================================
+   COCKPIT IGNITION, SYS WARNING LIGHTS, AND SLIDER TICK MARKS
+   ========================================================================== */
+
+/* Engine Ignition Switch Container */
+.ignition-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.ignition-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--motor-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Circular start/stop engine button */
+.ignition-btn {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 4px solid #1e293b;
+  background: radial-gradient(circle, #27272a 30%, #09090b 90%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.6), 
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.ignition-btn:hover {
+  transform: scale(1.05);
+  border-color: #3f3f46;
+}
+
+.ignition-btn:active {
+  transform: scale(0.95);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    inset 0 3px 6px rgba(0, 0, 0, 0.9);
+}
+
+/* LED Ring indicator inside start/stop button */
+.ignition-btn::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Stopped Engine LED State - Dim Red */
+.ignition-btn.engine-stopped::before {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 
+    inset 0 0 10px rgba(239, 68, 68, 0.2),
+    0 0 6px rgba(239, 68, 68, 0.2);
+}
+
+/* Running Engine LED State - Glowing pulsing green */
+.ignition-btn.engine-running::before {
+  border-color: var(--motor-accent-green);
+  box-shadow: 
+    inset 0 0 12px rgba(5, 243, 148, 0.8),
+    0 0 12px rgba(5, 243, 148, 0.5);
+  animation: ignition-glow-pulse 1.5s infinite alternate;
+}
+
+@keyframes ignition-glow-pulse {
+  0% { opacity: 0.6; filter: drop-shadow(0 0 2px rgba(5, 243, 148, 0.4)); }
+  100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(5, 243, 148, 0.9)); }
+}
+
+.ignition-text-main {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  margin-bottom: 2px;
+}
+
+.ignition-text-sub {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.engine-stopped .ignition-text-sub {
+  color: var(--motor-accent-red);
+}
+
+.engine-running .ignition-text-sub {
+  color: var(--motor-accent-green);
+  animation: flash 1s infinite alternate;
+}
+
+/* System Warning LED Indicator Cluster */
+.diagnostic-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.diagnostic-panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--motor-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 6px;
+}
+
+.led-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.led-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.led-lamp {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #1e293b;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+/* Dynamic LED On Glows */
+.led-lamp.led-green-on {
+  background-color: var(--motor-accent-green);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 0 10px var(--motor-accent-green),
+    0 0 4px var(--motor-accent-green);
+}
+
+.led-lamp.led-cyan-on {
+  background-color: var(--motor-accent-blue);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 0 10px var(--motor-accent-blue),
+    0 0 4px var(--motor-accent-blue);
+  animation: led-pulse 1s infinite alternate;
+}
+
+@keyframes led-pulse {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.led-lamp.led-red-on {
+  background-color: var(--motor-accent-red);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 0 12px var(--motor-accent-red),
+    0 0 5px var(--motor-accent-red);
+  animation: led-blink 0.5s infinite alternate;
+}
+
+@keyframes led-blink {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.led-lamp.led-orange-on {
+  background-color: var(--motor-accent-orange);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 0 10px var(--motor-accent-orange),
+    0 0 4px var(--motor-accent-orange);
+}
+
+.led-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--motor-text-muted);
+}
+
+.led-lamp.led-green-on + .led-label { color: var(--motor-accent-green); }
+.led-lamp.led-cyan-on + .led-label { color: var(--motor-accent-blue); }
+.led-lamp.led-red-on + .led-label { color: var(--motor-accent-red); }
+.led-lamp.led-orange-on + .led-label { color: var(--motor-accent-orange); }
+
+/* Slider Ticks/Graduations scale styling */
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  margin-top: -2px;
+}
+
+.tick {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: #4b5563;
+  position: relative;
+}
+
+.tick::before {
+  content: '|';
+  display: block;
+  text-align: center;
+  font-size: 0.45rem;
+  color: #374151;
+  margin-bottom: -1px;
+}
+
+/* ==========================================================================
+   TELEMETRY HISTORY GRAPH STYLING
+   ========================================================================== */
+.telemetry-charts-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+@media (max-width: 1024px) {
+  .telemetry-charts-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-wrapper {
+  background: rgba(10, 15, 26, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.chart-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 8px;
+}
+
+.chart-title-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--motor-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.chart-value-sub {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.premium-svg-chart {
+  width: 100%;
+  height: 120px;
+  display: block;
+  overflow: visible;
+}
+
+/* ==========================================================================
+   AI DIAGNOSTIC VOICE PLAYBACK STYLING
+   ========================================================================== */
+.ai-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.speech-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: var(--motor-text-muted);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.speech-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--motor-accent-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 0 8px rgba(0, 247, 255, 0.25);
+}
+
+.speech-btn.playing {
+  background: rgba(5, 243, 148, 0.12);
+  border-color: rgba(5, 243, 148, 0.3);
+  color: var(--motor-accent-green);
+  box-shadow: 0 0 10px rgba(5, 243, 148, 0.25);
+}
+
+/* Animated Sound Wave bars */
+.speech-icon-animated {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 12px;
+  height: 12px;
+}
+
+.speech-icon-animated .bar {
+  width: 2px;
+  height: 4px;
+  background-color: var(--motor-accent-green);
+  animation: bounce-wave 0.8s ease-in-out infinite alternate;
+}
+
+.speech-icon-animated .bar:nth-child(1) {
+  animation-delay: 0.15s;
+}
+
+.speech-icon-animated .bar:nth-child(2) {
+  animation-delay: 0.45s;
+  height: 8px;
+}
+
+.speech-icon-animated .bar:nth-child(3) {
+  animation-delay: 0.3s;
+  height: 6px;
+}
+
+@keyframes bounce-wave {
+  0% {
+    height: 3px;
+  }
+  100% {
+    height: 12px;
+  }
+}

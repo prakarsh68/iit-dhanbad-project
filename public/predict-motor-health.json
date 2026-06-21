@@ -1,0 +1,23 @@
+{
+  "health": 96.5,
+  "failure_probability": 3.8,
+  "rul": 19200,
+  "predictions": {
+    "thermal_margin": {
+      "status": "ok",
+      "text": "Stator windings running nominal. Thermal margin: +41.5°C remaining."
+    },
+    "insulation_health": {
+      "status": "ok",
+      "text": "Insulation electrical resistivity within safety threshold (99.8% health)."
+    },
+    "vibration_profile": {
+      "status": "ok",
+      "text": "High-frequency acoustic bearings report normal friction levels (< 0.12 mm/s)."
+    },
+    "battery_health": {
+      "status": "ok",
+      "text": "Pack Voltage balance within 5mV deviation. SOC is nominal."
+    }
+  }
+}
