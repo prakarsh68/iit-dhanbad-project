@@ -25,6 +25,3 @@ dist-ssr
 
 # Environment Variables
 .env
-
-public/models/car_1.glb
-public/models/car_2.glb
