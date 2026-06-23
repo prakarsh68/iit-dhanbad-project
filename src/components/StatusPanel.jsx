@@ -72,7 +72,8 @@ export default function StatusPanel({ data }) {
 
 
   const downloadReport = () => {
-    window.open("http://127.0.0.1:8000/download-report", "_blank");
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "https://prakarshawasthi-iit-dhanbad-backend.hf.space";
+    window.open(`${apiBaseUrl}/download-report`, "_blank");
   };
 
   const getSeverityClass = (sev) => {

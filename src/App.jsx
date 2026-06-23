@@ -14,6 +14,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [activeTwin, setActiveTwin] = useState("tyre"); // 'tyre' or 'motor'
   const [time, setTime] = useState("");
+  const [isSimulated, setIsSimulated] = useState(false);
 
   // Clock effect
   useEffect(() => {
@@ -37,16 +38,37 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        "http://127.0.0.1:8000/latest-result"
-      );
-
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "https://prakarshawasthi-iit-dhanbad-backend.hf.space";
+      const response = await fetch(`${apiBaseUrl}/latest-result`);
+      if (!response.ok) {
+        throw new Error("API response not ok");
+      }
       const result = await response.json();
 
       setData(result);
+      setIsSimulated(false);
       setLoading(false);
     } catch (err) {
-      console.error(err);
+      console.warn("Backend API not reachable. Using fallback mock simulation data.", err);
+      // Fallback mock data
+      const mockResult = {
+        health_score: 94,
+        risk_score: 6,
+        risk_level: "Low",
+        adjusted_km: 15430,
+        severity: "Normal",
+        vehicle_type: "Sedan",
+        date: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        temperature: 34,
+        pressure: 32,
+        recommendations: [
+          "Maintain current tyre inflation (32 PSI). Check weekly.",
+          "Inspect tread depth periodically (current tread depth is healthy at 5.5mm).",
+          "Ensure alignment is checked every 10,000 km."
+        ]
+      };
+      setData(mockResult);
+      setIsSimulated(true);
       setLoading(false);
     }
   };
@@ -56,7 +78,7 @@ function App() {
 
     const interval = setInterval(
       fetchData,
-      2000
+      3000
     );
 
     return () => clearInterval(interval);
@@ -70,18 +92,6 @@ function App() {
           <span className="dot"></span>
           <h2>Loading Digital Twin…</h2>
           <p>Connecting to inspection backend</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="app">
-        <div className="background-grid"></div>
-        <div className="state-screen state-screen--error">
-          <h2>Unable to connect to backend</h2>
-          <p>Check that the analysis service is running at 127.0.0.1:8000</p>
         </div>
       </div>
     );
@@ -132,9 +142,9 @@ function App() {
               <span style={{ color: "var(--clr-cyan)", animation: "flash 2s infinite" }}>🕒</span> {time}
             </div>
           )}
-          <div className="status-badge">
+          <div className={`status-badge ${isSimulated ? "simulated" : ""}`}>
             <span className="status-dot"></span>
-            SYSTEM ONLINE
+            {isSimulated ? "OFFLINE SIMULATION" : "SYSTEM ONLINE"}
           </div>
         </div>
       </header>

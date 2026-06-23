@@ -596,7 +596,7 @@ function EvMotorDashboard() {
     setAiState("scanning");
     
     // API endpoint parameters from .env
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "https://ev-motor-digital-twin-api.onrender.com";
+    const apiBaseUrl = import.meta.env.VITE_MOTOR_API_BASE_URL || "https://ev-motor-digital-twin-api.onrender.com";
     const apiKey = import.meta.env.VITE_APP_API_KEY || "AjB4psWXP108x2ZbWpOio6CIeXM0IYQza94QKIHiEeg";
 
     // Package active parameters to send in request body matching MotorInput OpenAPI schema

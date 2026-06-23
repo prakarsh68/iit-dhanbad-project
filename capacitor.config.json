@@ -1,0 +1,8 @@
+{
+  "appId": "com.iit.digitaltwin",
+  "appName": "IIT Digital Twin",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

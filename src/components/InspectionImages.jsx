@@ -1,5 +1,6 @@
 export default function InspectionImages() {
   const timestamp = Date.now();
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "https://prakarshawasthi-iit-dhanbad-backend.hf.space";
 
   return (
     <div className="inspection-grid">
@@ -16,7 +17,7 @@ export default function InspectionImages() {
           <div className="corner-target bottom-right"></div>
           <div className="lens-grid"></div>
           <img
-            src={`http://127.0.0.1:8000/data/latest_input.jpg?t=${timestamp}`}
+            src={`${apiBaseUrl}/data/latest_input.jpg?t=${timestamp}`}
             alt="Optical Input"
             className="inspection-image"
           />
@@ -38,7 +39,7 @@ export default function InspectionImages() {
           <div className="corner-target bottom-right"></div>
           <div className="lens-grid"></div>
           <img
-            src={`http://127.0.0.1:8000/data/latest_output.jpg?t=${timestamp}`}
+            src={`${apiBaseUrl}/data/latest_output.jpg?t=${timestamp}`}
             alt="AI Detection"
             className="inspection-image"
           />
