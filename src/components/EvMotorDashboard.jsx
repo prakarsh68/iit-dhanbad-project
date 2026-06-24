@@ -784,7 +784,118 @@ function EvMotorDashboard() {
   return (
     <div className="motor-layout">
       {/* Collapsible Sidebar for Controls */}
-      <aside className={`motor-sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      <div className={`motor-sidebar-wrapper ${isCollapsed ? "collapsed" : ""}`}>
+        <aside className="motor-sidebar">
+          {!isCollapsed && (
+            <>
+              <div className="sidebar-header">
+                <span>🚗</span> Vehicle Controls
+              </div>
+
+              {/* Diagnostic LED warning light panel */}
+              <div className="diagnostic-panel">
+                <div className="diagnostic-panel-title">SYS Diagnostic LEDs</div>
+                <div className="led-grid">
+                  <div className="led-item">
+                    <div className={`led-lamp ${soc > 0 ? "led-green-on" : ""}`} />
+                    <span className="led-label">RDY</span>
+                  </div>
+                  <div className="led-item">
+                    <div className={`led-lamp ${isRunning ? "led-cyan-on" : ""}`} />
+                    <span className="led-label">RUN</span>
+                  </div>
+                  <div className="led-item">
+                    <div className={`led-lamp ${statorTemp >= 80 || rotorTemp >= 95 ? "led-red-on" : ""}`} />
+                    <span className="led-label">TMP</span>
+                  </div>
+                  <div className="led-item">
+                    <div className={`led-lamp ${soc < 20 ? (soc <= 0 ? "led-red-on" : "led-orange-on") : ""}`} />
+                    <span className="led-label">BAT</span>
+                  </div>
+                  <div className="led-item">
+                    <div className={`led-lamp ${brake > 0 ? "led-red-on" : ""}`} />
+                    <span className="led-label">BRK</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Slider Controls */}
+              <div className="slider-group">
+                <div className="slider-label-row">
+                  <span className="slider-label">Accelerator (%)</span>
+                  <span className="slider-value">{accelerator}</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={accelerator}
+                  onChange={(e) => setAccelerator(Number(e.target.value))}
+                  className="motor-range-slider"
+                />
+                <div className="slider-ticks">
+                  <span className="tick">0</span>
+                  <span className="tick">20</span>
+                  <span className="tick">40</span>
+                  <span className="tick">60</span>
+                  <span className="tick">80</span>
+                  <span className="tick">100</span>
+                </div>
+              </div>
+
+              <div className="slider-group">
+                <div className="slider-label-row">
+                  <span className="slider-label">Brake (%)</span>
+                  <span className="slider-value" style={{ color: brake > 0 ? "var(--motor-accent-red)" : "var(--motor-text-muted)" }}>
+                    {brake}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={brake}
+                  onChange={(e) => setBrake(Number(e.target.value))}
+                  className="motor-range-slider"
+                  style={{
+                    background: `linear-gradient(90deg, rgba(255,255,255,0.06) ${100 - brake}%, rgba(255,71,87,0.2) ${brake}%)`
+                  }}
+                />
+                <div className="slider-ticks">
+                  <span className="tick">0</span>
+                  <span className="tick">20</span>
+                  <span className="tick">40</span>
+                  <span className="tick">60</span>
+                  <span className="tick">80</span>
+                  <span className="tick">100</span>
+                </div>
+              </div>
+
+              {/* Ignition and actions buttons */}
+              <div className="ignition-container">
+                <span className="ignition-label">Engine Ignition</span>
+                <button 
+                  className={`ignition-btn ${isRunning ? "engine-running" : "engine-stopped"}`}
+                  onClick={isRunning ? handleStop : handleStart}
+                  disabled={soc <= 0}
+                  title={isRunning ? "Stop Motor Engine" : "Start Motor Engine"}
+                >
+                  <span className="ignition-text-main">START</span>
+                  <span className="ignition-text-sub">{isRunning ? "RUNNING" : "STOPPED"}</span>
+                </button>
+              </div>
+
+              <div className="sidebar-actions">
+                <button className="motor-btn btn-reset" onClick={handleReset}>
+                  🔄 Reset Console
+                </button>
+                <button className="motor-btn btn-predict" onClick={handlePredictAI}>
+                  👁 Predict AI Health
+                </button>
+              </div>
+            </>
+          )}
+        </aside>
         <button 
           className="sidebar-toggle-btn" 
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -792,117 +903,7 @@ function EvMotorDashboard() {
         >
           {isCollapsed ? "»" : "«"}
         </button>
-
-        {!isCollapsed && (
-          <>
-            <div className="sidebar-header">
-              <span>🚗</span> Vehicle Controls
-            </div>
-
-            {/* Diagnostic LED warning light panel */}
-            <div className="diagnostic-panel">
-              <div className="diagnostic-panel-title">SYS Diagnostic LEDs</div>
-              <div className="led-grid">
-                <div className="led-item">
-                  <div className={`led-lamp ${soc > 0 ? "led-green-on" : ""}`} />
-                  <span className="led-label">RDY</span>
-                </div>
-                <div className="led-item">
-                  <div className={`led-lamp ${isRunning ? "led-cyan-on" : ""}`} />
-                  <span className="led-label">RUN</span>
-                </div>
-                <div className="led-item">
-                  <div className={`led-lamp ${statorTemp >= 80 || rotorTemp >= 95 ? "led-red-on" : ""}`} />
-                  <span className="led-label">TMP</span>
-                </div>
-                <div className="led-item">
-                  <div className={`led-lamp ${soc < 20 ? (soc <= 0 ? "led-red-on" : "led-orange-on") : ""}`} />
-                  <span className="led-label">BAT</span>
-                </div>
-                <div className="led-item">
-                  <div className={`led-lamp ${brake > 0 ? "led-red-on" : ""}`} />
-                  <span className="led-label">BRK</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Slider Controls */}
-            <div className="slider-group">
-              <div className="slider-label-row">
-                <span className="slider-label">Accelerator (%)</span>
-                <span className="slider-value">{accelerator}</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={accelerator}
-                onChange={(e) => setAccelerator(Number(e.target.value))}
-                className="motor-range-slider"
-              />
-              <div className="slider-ticks">
-                <span className="tick">0</span>
-                <span className="tick">20</span>
-                <span className="tick">40</span>
-                <span className="tick">60</span>
-                <span className="tick">80</span>
-                <span className="tick">100</span>
-              </div>
-            </div>
-
-            <div className="slider-group">
-              <div className="slider-label-row">
-                <span className="slider-label">Brake (%)</span>
-                <span className="slider-value" style={{ color: brake > 0 ? "var(--motor-accent-red)" : "var(--motor-text-muted)" }}>
-                  {brake}
-                </span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={brake}
-                onChange={(e) => setBrake(Number(e.target.value))}
-                className="motor-range-slider"
-                style={{
-                  background: `linear-gradient(90deg, rgba(255,255,255,0.06) ${100 - brake}%, rgba(255,71,87,0.2) ${brake}%)`
-                }}
-              />
-              <div className="slider-ticks">
-                <span className="tick">0</span>
-                <span className="tick">20</span>
-                <span className="tick">40</span>
-                <span className="tick">60</span>
-                <span className="tick">80</span>
-                <span className="tick">100</span>
-              </div>
-            </div>
-
-            {/* Ignition and actions buttons */}
-            <div className="ignition-container">
-              <span className="ignition-label">Engine Ignition</span>
-              <button 
-                className={`ignition-btn ${isRunning ? "engine-running" : "engine-stopped"}`}
-                onClick={isRunning ? handleStop : handleStart}
-                disabled={soc <= 0}
-                title={isRunning ? "Stop Motor Engine" : "Start Motor Engine"}
-              >
-                <span className="ignition-text-main">START</span>
-                <span className="ignition-text-sub">{isRunning ? "RUNNING" : "STOPPED"}</span>
-              </button>
-            </div>
-
-            <div className="sidebar-actions">
-              <button className="motor-btn btn-reset" onClick={handleReset}>
-                🔄 Reset Console
-              </button>
-              <button className="motor-btn btn-predict" onClick={handlePredictAI}>
-                👁 Predict AI Health
-              </button>
-            </div>
-          </>
-        )}
-      </aside>
+      </div>
 
       {/* Main Panel Content */}
       <main className="motor-main">
