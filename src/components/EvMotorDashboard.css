@@ -39,7 +39,7 @@
   flex-direction: column;
   gap: 28px;
   position: relative;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
   z-index: 20;
@@ -50,6 +50,49 @@
   padding: 28px 0;
   overflow: hidden;
   border-right: none;
+}
+
+/* Full-page Cockpit Mode Overlay Styling */
+.motor-sidebar.full-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  z-index: 100;
+  background: radial-gradient(circle at center, rgba(10, 15, 30, 0.98) 0%, rgba(3, 7, 18, 0.99) 100%);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: translateX(0);
+  opacity: 1;
+  border-right: none;
+}
+
+.motor-sidebar.full-page.collapsed {
+  width: 100%;
+  max-width: 100%;
+  padding: 40px;
+  transform: translateX(-100%);
+  border-right: none;
+}
+
+/* Hide all cockpit contents except toggle button when collapsed */
+.motor-sidebar.full-page.collapsed > :not(.sidebar-toggle-btn) {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.motor-sidebar.full-page.collapsed .sidebar-toggle-btn {
+  transform: translateX(100%); /* Counter-translate the button so it remains visible at screen edge */
+  border-radius: 0 4px 4px 0;
+  width: 20px;
+  height: 36px;
+  right: -20px;
 }
 
 /* Collapsible Toggle Trigger */
@@ -1062,4 +1105,293 @@
   100% {
     height: 12px;
   }
+}
+
+/* ==========================================================================
+   COCKPIT FULL SCREEN OVERLAY STYLING
+   ========================================================================== */
+
+.cockpit-full-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+}
+
+.cockpit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  max-width: 1000px;
+  background: rgba(17, 24, 39, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.cockpit-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--motor-accent-blue), transparent);
+  border-radius: 16px 16px 0 0;
+}
+
+.cockpit-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cockpit-logo-glow {
+  font-size: 2.2rem;
+  color: var(--motor-accent-blue);
+  text-shadow: 0 0 15px var(--motor-accent-blue);
+  animation: pulse-logo 1.5s infinite alternate;
+}
+
+@keyframes pulse-logo {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(0, 247, 255, 0.4)); }
+  100% { transform: scale(1.1); filter: drop-shadow(0 0 12px rgba(0, 247, 255, 0.8)); }
+}
+
+.cockpit-header h1 {
+  font-size: 2rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.cockpit-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--motor-accent-orange);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.cockpit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 10px 0;
+}
+
+@media (max-width: 850px) {
+  .cockpit-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.cockpit-panel-card {
+  background: rgba(10, 15, 26, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.cockpit-panel-card h3 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--motor-accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+  margin: 0;
+}
+
+.ignition-wrapper-large {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.ignition-btn-large {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 5px solid #1e293b;
+  background: radial-gradient(circle, #ff4757 10%, #7f1d1d 90%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 20px rgba(255, 71, 87, 0.3), 
+    inset 0 3px 6px rgba(255, 255, 255, 0.25),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.8);
+}
+
+.ignition-btn-large::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.ignition-btn-large:hover {
+  transform: scale(1.08);
+  border-color: #3f3f46;
+  box-shadow: 
+    0 12px 25px rgba(255, 71, 87, 0.55), 
+    inset 0 3px 6px rgba(255, 255, 255, 0.35);
+}
+
+.ignition-btn-large:active {
+  transform: scale(0.96);
+  box-shadow: 
+    0 4px 10px rgba(255, 71, 87, 0.2), 
+    inset 0 4px 8px rgba(0, 0, 0, 0.9);
+}
+
+.ignition-text-primary {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.ignition-text-secondary {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.battery-status-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--motor-text-muted);
+}
+
+.battery-label-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.battery-track {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.battery-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #05f394, #00f7ff);
+  box-shadow: 0 0 8px rgba(5, 243, 148, 0.5);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.led-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.led-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: #cbd5e1;
+}
+
+.cockpit-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .cockpit-footer {
+    flex-direction: column;
+    width: 100%;
+  }
+  .cockpit-footer .motor-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.motor-btn.btn-skip {
+  color: var(--motor-text-muted);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.motor-btn.btn-skip:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.ignition-btn-large.engine-running {
+  background: radial-gradient(circle, #05f394 10%, #064e3b 90%) !important;
+  border-color: #065f46 !important;
+  box-shadow: 
+    0 8px 20px rgba(5, 243, 148, 0.3), 
+    inset 0 3px 6px rgba(255, 255, 255, 0.25),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.8) !important;
+}
+
+.ignition-btn-large.engine-running:hover {
+  box-shadow: 
+    0 12px 25px rgba(5, 243, 148, 0.55), 
+    inset 0 3px 6px rgba(255, 255, 255, 0.35) !important;
+}
+
+.btn-open-cockpit {
+  background: linear-gradient(135deg, rgba(0, 247, 255, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%) !important;
+  border-color: rgba(0, 247, 255, 0.25) !important;
+  color: #00f7ff !important;
+}
+
+.btn-open-cockpit:hover {
+  background: linear-gradient(135deg, rgba(0, 247, 255, 0.18) 0%, rgba(59, 130, 246, 0.22) 100%) !important;
+  border-color: rgba(0, 247, 255, 0.55) !important;
+  box-shadow: 0 0 12px rgba(0, 247, 255, 0.25) !important;
+  transform: translateY(-2px);
 }
