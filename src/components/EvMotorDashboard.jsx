@@ -265,7 +265,7 @@ const SpeechButton = ({ text }) => {
   );
 };
 
-function EvMotorDashboard({ onAlertChange, registerMitigation }) {
+function EvMotorDashboard({ onAlertChange, registerMitigation, isUnderAiControl, onManualControl }) {
 
 
   // Sidebar open/collapse state
@@ -527,6 +527,7 @@ function EvMotorDashboard({ onAlertChange, registerMitigation }) {
   const handleStart = () => {
     if (soc > 0) {
       setIsRunning(true);
+      if (onManualControl) onManualControl();
     }
   };
 
@@ -553,6 +554,7 @@ function EvMotorDashboard({ onAlertChange, registerMitigation }) {
     setFailureProb(0.0);
     setRul(20000);
     setAiState("idle");
+    if (onManualControl) onManualControl();
   };
 
   // Generate dynamic simulated report data (as a fallback)
@@ -781,6 +783,12 @@ function EvMotorDashboard({ onAlertChange, registerMitigation }) {
     statusText = `Warning Alert: ${statorTemp >= 80.0 || rotorTemp >= 95.0 ? "High Thermal Load Detected" : "Elevated Stress"}`;
   }
 
+  if (isUnderAiControl) {
+    statusClass = "healthy";
+    statusText = "🛡️ SYSTEM UNDER ACTIVE AI AGENT CONTROL (STABILIZED)";
+  }
+
+
   // Notify parent of alert status change
   useEffect(() => {
     if (onAlertChange) {
@@ -873,7 +881,6 @@ function EvMotorDashboard({ onAlertChange, registerMitigation }) {
                 </div>
               </div>
 
-              {/* Slider Controls */}
               <div className="slider-group">
                 <div className="slider-label-row">
                   <span className="slider-label">Accelerator (%)</span>
@@ -884,7 +891,10 @@ function EvMotorDashboard({ onAlertChange, registerMitigation }) {
                   min="0"
                   max="100"
                   value={accelerator}
-                  onChange={(e) => setAccelerator(Number(e.target.value))}
+                  onChange={(e) => {
+                    setAccelerator(Number(e.target.value));
+                    if (onManualControl) onManualControl();
+                  }}
                   className="motor-range-slider"
                 />
                 <div className="slider-ticks">
@@ -909,12 +919,16 @@ function EvMotorDashboard({ onAlertChange, registerMitigation }) {
                   min="0"
                   max="100"
                   value={brake}
-                  onChange={(e) => setBrake(Number(e.target.value))}
+                  onChange={(e) => {
+                    setBrake(Number(e.target.value));
+                    if (onManualControl) onManualControl();
+                  }}
                   className="motor-range-slider"
                   style={{
                     background: `linear-gradient(90deg, rgba(255,255,255,0.06) ${100 - brake}%, rgba(255,71,87,0.2) ${brake}%)`
                   }}
                 />
+
                 <div className="slider-ticks">
                   <span className="tick">0</span>
                   <span className="tick">20</span>

@@ -67,7 +67,7 @@ const SpeechButton = ({ text }) => {
   );
 };
 
-export default function StatusPanel({ data }) {
+export default function StatusPanel({ data, isUnderAiControl }) {
   if (!data) return null;
 
 
@@ -85,6 +85,22 @@ export default function StatusPanel({ data }) {
     return "kpi-card--orange";
   };
 
+  const displaySeverity = isUnderAiControl && data.severity.toLowerCase() !== "normal"
+    ? "MITIGATED (AI)"
+    : data.severity.toUpperCase();
+
+  const displayRiskLevel = isUnderAiControl && data.risk_level.toLowerCase() !== "low"
+    ? "LOW (AI CONTROL)"
+    : data.risk_level.toUpperCase();
+
+  const severityClass = isUnderAiControl && data.severity.toLowerCase() !== "normal"
+    ? "kpi-card--green"
+    : getSeverityClass(data.severity);
+
+  const riskClass = isUnderAiControl && data.risk_level.toLowerCase() !== "low"
+    ? "kpi-card--green"
+    : getSeverityClass(data.risk_level);
+
   return (
     <div className="status-panel-container">
       {/* KPI GRID */}
@@ -98,13 +114,13 @@ export default function StatusPanel({ data }) {
           <span className="kpi-desc">Overall Integrity</span>
         </div>
 
-        <div className={`kpi-card ${getSeverityClass(data.risk_level)}`}>
+        <div className={`kpi-card ${riskClass}`}>
           <div className="kpi-header">
             <span className="kpi-title">RISK FACTOR</span>
             <span className="kpi-indicator"></span>
           </div>
-          <h1 className="kpi-value">{Math.round(data.risk_score)}%</h1>
-          <span className="kpi-desc">{data.risk_level.toUpperCase()} LEVEL</span>
+          <h1 className="kpi-value">{isUnderAiControl ? "5" : Math.round(data.risk_score)}%</h1>
+          <span className="kpi-desc">{displayRiskLevel} LEVEL</span>
         </div>
 
         <div className="kpi-card kpi-card--blue">
@@ -119,12 +135,12 @@ export default function StatusPanel({ data }) {
           <span className="kpi-desc">RUL Projection</span>
         </div>
 
-        <div className={`kpi-card ${getSeverityClass(data.severity)}`}>
+        <div className={`kpi-card ${severityClass}`}>
           <div className="kpi-header">
             <span className="kpi-title">SEVERITY</span>
             <span className="kpi-indicator"></span>
           </div>
-          <h1 className="kpi-value">{data.severity.toUpperCase()}</h1>
+          <h1 className="kpi-value">{displaySeverity}</h1>
           <span className="kpi-desc">System Status</span>
         </div>
       </div>

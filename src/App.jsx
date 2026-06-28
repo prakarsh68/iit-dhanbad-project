@@ -23,12 +23,13 @@ function App() {
   const [aiAgentReason, setAiAgentReason] = useState("");
   const [overrideActive, setOverrideActive] = useState(false);
   const [lastMitigatedAt, setLastMitigatedAt] = useState(0);
+  const [isUnderAiControl, setIsUnderAiControl] = useState(false);
 
   const motorMitigationRef = useRef(null);
 
   // Tyre anomaly safety trigger effect
   useEffect(() => {
-    if (!data || overrideActive || aiAgentActive) return;
+    if (!data || overrideActive || aiAgentActive || isUnderAiControl) return;
     
     // Check if Tyre twin is warning/critical
     if (data.severity && data.severity !== "Normal") {
@@ -39,9 +40,10 @@ function App() {
       setAiAgentReason(`Tyre Alert Detected: Severity Level: ${data.severity}, Risk Level: ${data.risk_level}. AI safety lock engaged.`);
       setAiAgentActive(true);
     }
-  }, [data, overrideActive, aiAgentActive, lastMitigatedAt]);
+  }, [data, overrideActive, aiAgentActive, lastMitigatedAt, isUnderAiControl]);
 
   const handleMitigate = () => {
+    setIsUnderAiControl(true);
     if (aiAgentSource === "motor" && motorMitigationRef.current) {
       motorMitigationRef.current();
     } else if (aiAgentSource === "tyre") {
@@ -68,6 +70,7 @@ function App() {
   const handleOverride = () => {
     setOverrideActive(true);
     setAiAgentActive(false);
+    setIsUnderAiControl(false);
     // Automatically reset override after 40 seconds to allow safety re-engagement
     setTimeout(() => {
       setOverrideActive(false);
@@ -215,16 +218,25 @@ function App() {
         </div>
       </header>
 
+      {isUnderAiControl && (
+        <div className="ai-controlled-banner">
+          <span className="shield-icon">🛡️</span>
+          <span className="banner-text">AI SAFETY ENGAGED: SYSTEM TELEMETRY RESTORED & MANAGED BY AI AGENT</span>
+          <button className="banner-dismiss" onClick={() => setIsUnderAiControl(false)}>DISMISS</button>
+        </div>
+      )}
 
       {activeTwin === "tyre" && (
-        <div className={`alert-banner alert-banner--${data.severity.toLowerCase()}`}>
+        <div className={`alert-banner alert-banner--${isUnderAiControl ? "normal" : data.severity.toLowerCase()}`}>
           <span className="alert-icon">
-            {data.severity === "Normal" ? "✓" : "⚠"}
+            {isUnderAiControl || data.severity === "Normal" ? "✓" : "⚠"}
           </span>
           <span className="alert-text">
-            {data.severity === "Normal"
-              ? "Tyre Condition Nominal - No Action Required"
-              : `${data.severity.toUpperCase()} ALERT: ${data.risk_level} Risk Level Detected`}
+            {isUnderAiControl 
+              ? "TYRE STATE MITIGATED: System stabilized under AI Agent active safety control."
+              : data.severity === "Normal"
+                ? "Tyre Condition Nominal - No Action Required"
+                : `${data.severity.toUpperCase()} ALERT: ${data.risk_level} Risk Level Detected`}
           </span>
         </div>
       )}
@@ -240,14 +252,16 @@ function App() {
 
           {/* RIGHT COLUMN: METRICS, AI RECOMMENDATIONS, INSPECTION IMAGES */}
           <section className="dashboard-right">
-            <StatusPanel data={data} />
+            <StatusPanel data={data} isUnderAiControl={isUnderAiControl} />
             <InspectionImages />
           </section>
         </main>
       ) : (
         <EvMotorDashboard 
+          isUnderAiControl={isUnderAiControl}
+          onManualControl={() => setIsUnderAiControl(false)}
           onAlertChange={(statusClass, statusText) => {
-            if (overrideActive || aiAgentActive) return;
+            if (overrideActive || aiAgentActive || isUnderAiControl) return;
             if (statusClass === "warning" || statusClass === "critical") {
               if (Date.now() - lastMitigatedAt < 10000) return;
               

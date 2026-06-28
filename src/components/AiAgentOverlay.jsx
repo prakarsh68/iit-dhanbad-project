@@ -5,7 +5,21 @@ function AiAgentOverlay({ source, reason, onMitigate, onOverride, onClose }) {
   const [logs, setLogs] = useState([]);
   const [isMitigating, setIsMitigating] = useState(false);
   const [mitigationProgress, setMitigationProgress] = useState(0);
+  const [countdown, setCountdown] = useState(5);
   const audioSpoken = useRef(false);
+
+  // 5-second auto-mitigation timer
+  useEffect(() => {
+    if (isMitigating) return;
+    if (countdown <= 0) {
+      handleMitigate();
+      return;
+    }
+    const timer = setTimeout(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [countdown, isMitigating]);
 
   // Terminal logging animation
   useEffect(() => {
@@ -166,7 +180,7 @@ function AiAgentOverlay({ source, reason, onMitigate, onOverride, onClose }) {
             ) : (
               <div className="hud-controls">
                 <button className="hud-btn primary" onClick={handleMitigate}>
-                  🛡️ EXECUTE AUTOMATED AI MITIGATION
+                  🛡️ EXECUTE AUTOMATED AI MITIGATION (AUTO-ENGAGE IN {countdown}s)
                 </button>
                 <button className="hud-btn secondary" onClick={handleOverride}>
                   ⚠️ DE-AUTHORIZE & OVERRIDE LOCK

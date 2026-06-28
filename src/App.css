@@ -1493,3 +1493,60 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* AI controlled banner style */
+.ai-controlled-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(5, 243, 148, 0.08);
+  border: 1px solid rgba(5, 243, 148, 0.3);
+  box-shadow: 0 0 15px rgba(5, 243, 148, 0.1);
+  padding: 12px 24px;
+  margin: 16px 24px;
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  color: #05f394;
+  animation: bannerGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes bannerGlow {
+  0% { border-color: rgba(5, 243, 148, 0.2); box-shadow: 0 0 10px rgba(5, 243, 148, 0.05); }
+  100% { border-color: rgba(5, 243, 148, 0.5); box-shadow: 0 0 20px rgba(5, 243, 148, 0.2); }
+}
+
+.ai-controlled-banner .shield-icon {
+  font-size: 1.1rem;
+  animation: shieldPulse 1.5s infinite alternate;
+}
+
+@keyframes shieldPulse {
+  0% { transform: scale(0.9); filter: drop-shadow(0 0 2px rgba(5, 243, 148, 0.5)); }
+  100% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(5, 243, 148, 0.8)); }
+}
+
+.ai-controlled-banner .banner-text {
+  flex: 1;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.ai-controlled-banner .banner-dismiss {
+  background: transparent;
+  border: 1px solid rgba(5, 243, 148, 0.4);
+  color: #05f394;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.ai-controlled-banner .banner-dismiss:hover {
+  background: rgba(5, 243, 148, 0.1);
+  border-color: #05f394;
+  color: #fff;
+}
