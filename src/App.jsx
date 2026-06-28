@@ -26,11 +26,16 @@ function App() {
   const [isUnderAiControl, setIsUnderAiControl] = useState(false);
 
   const motorMitigationRef = useRef(null);
+  const motorResetRef = useRef(null);
+  const initialTyreDate = useRef(null);
 
   // Tyre anomaly safety trigger effect
   useEffect(() => {
     if (!data || overrideActive || aiAgentActive || isUnderAiControl) return;
     
+    // Avoid triggering safety overlay on historical data initially loaded
+    if (data.date === initialTyreDate.current) return;
+
     // Check if Tyre twin is warning/critical
     if (data.severity && data.severity !== "Normal") {
       // Avoid looping triggers immediately after mitigation
@@ -77,6 +82,40 @@ function App() {
     }, 40000);
   };
 
+  const handleSystemReset = () => {
+    // Reset Tyre
+    setData(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        severity: "Normal",
+        risk_level: "Low",
+        risk_score: 5,
+        health_score: 98,
+        recommendations: [
+          "Maintain current tyre inflation (32 PSI). Check weekly.",
+          "Inspect tread depth periodically.",
+          "Ensure alignment is checked every 10,000 km."
+        ]
+      };
+    });
+    
+    // Set initial date to prevent immediate re-trigger
+    initialTyreDate.current = null;
+    
+    // Reset Motor
+    if (motorResetRef.current) {
+      motorResetRef.current();
+    }
+
+    // Reset AI States
+    setAiAgentActive(false);
+    setOverrideActive(false);
+    setIsUnderAiControl(false);
+    setLastMitigatedAt(0);
+    window.speechSynthesis.cancel();
+  };
+
   const handleClose = () => {
     setAiAgentActive(false);
   };
@@ -115,6 +154,9 @@ function App() {
       }
 
       setData(result);
+      if (!initialTyreDate.current && result && result.date) {
+        initialTyreDate.current = result.date;
+      }
       setIsSimulated(false);
       setLoading(false);
     } catch (err) {
@@ -137,6 +179,9 @@ function App() {
         ]
       };
       setData(mockResult);
+      if (!initialTyreDate.current && mockResult && mockResult.date) {
+        initialTyreDate.current = mockResult.date;
+      }
       setIsSimulated(true);
       setLoading(false);
     }
@@ -193,7 +238,10 @@ function App() {
           </button>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          <button className="system-reset-btn" onClick={handleSystemReset} title="Reset Entire Digital Twin System">
+            🔄 Reset System
+          </button>
           {time && (
             <div style={{
               fontFamily: "var(--font-mono)",
@@ -222,9 +270,13 @@ function App() {
         <div className="ai-controlled-banner">
           <span className="shield-icon">🛡️</span>
           <span className="banner-text">AI SAFETY ENGAGED: SYSTEM TELEMETRY RESTORED & MANAGED BY AI AGENT</span>
-          <button className="banner-dismiss" onClick={() => setIsUnderAiControl(false)}>DISMISS</button>
+          <div className="banner-actions" style={{ display: "flex", gap: "10px" }}>
+            <button className="banner-reset" onClick={handleSystemReset}>RESET TO DRIVER CONTROL</button>
+            <button className="banner-dismiss" onClick={() => setIsUnderAiControl(false)}>DISMISS</button>
+          </div>
         </div>
       )}
+
 
       {activeTwin === "tyre" && (
         <div className={`alert-banner alert-banner--${isUnderAiControl ? "normal" : data.severity.toLowerCase()}`}>
@@ -260,6 +312,9 @@ function App() {
         <EvMotorDashboard 
           isUnderAiControl={isUnderAiControl}
           onManualControl={() => setIsUnderAiControl(false)}
+          registerReset={(resetFn) => {
+            motorResetRef.current = resetFn;
+          }}
           onAlertChange={(statusClass, statusText) => {
             if (overrideActive || aiAgentActive || isUnderAiControl) return;
             if (statusClass === "warning" || statusClass === "critical") {

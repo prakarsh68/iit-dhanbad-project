@@ -265,7 +265,7 @@ const SpeechButton = ({ text }) => {
   );
 };
 
-function EvMotorDashboard({ onAlertChange, registerMitigation, isUnderAiControl, onManualControl }) {
+function EvMotorDashboard({ onAlertChange, registerMitigation, registerReset, isUnderAiControl, onManualControl }) {
 
 
   // Sidebar open/collapse state
@@ -795,6 +795,13 @@ function EvMotorDashboard({ onAlertChange, registerMitigation, isUnderAiControl,
       onAlertChange(statusClass, statusText);
     }
   }, [statusClass, statusText, onAlertChange]);
+
+  // Register the reset function
+  useEffect(() => {
+    if (registerReset) {
+      registerReset(handleReset);
+    }
+  }, [registerReset]);
 
   // Register the autonomous mitigation function
   useEffect(() => {
