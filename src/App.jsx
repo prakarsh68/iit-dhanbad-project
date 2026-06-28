@@ -44,6 +44,10 @@ function App() {
         throw new Error("API response not ok");
       }
       const result = await response.json();
+      
+      if (result.error || result.severity === undefined || result.health_score === undefined) {
+        throw new Error(result.error || "Invalid response format: missing required fields");
+      }
 
       setData(result);
       setIsSimulated(false);

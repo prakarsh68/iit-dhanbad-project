@@ -239,6 +239,10 @@ export default function TyreViewer() {
           );
 
 
+        if (!response.ok) {
+          throw new Error("Wheel analysis failed on server");
+        }
+
         const result =
           await response.json();
 

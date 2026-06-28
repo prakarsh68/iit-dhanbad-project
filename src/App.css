@@ -1376,3 +1376,120 @@
     height: 12px;
   }
 }
+
+/* High-Tech Standby Viewport Styles */
+.standby-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #020617;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.standby-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
+}
+
+.standby-radar {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 247, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  z-index: 2;
+}
+
+.radar-sweep {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(0, 247, 255, 0.15) 0deg, transparent 90deg, transparent 360deg);
+  animation: radar-rotate 4s linear infinite;
+}
+
+.radar-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 247, 255, 0.25);
+}
+
+.radar-circle.circle-1 {
+  width: 60px;
+  height: 60px;
+}
+
+.radar-circle.circle-2 {
+  width: 30px;
+  height: 30px;
+}
+
+.radar-crosshair {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.radar-crosshair::before,
+.radar-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 247, 255, 0.2);
+}
+
+.radar-crosshair::before {
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.radar-crosshair::after {
+  left: 50%;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.standby-text-wrap {
+  text-align: center;
+  z-index: 2;
+}
+
+.standby-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--clr-cyan);
+  letter-spacing: 0.2em;
+  margin-bottom: 4px;
+  text-shadow: 0 0 8px rgba(0, 247, 255, 0.3);
+}
+
+.standby-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--clr-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@keyframes radar-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
