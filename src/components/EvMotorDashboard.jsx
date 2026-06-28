@@ -265,7 +265,7 @@ const SpeechButton = ({ text }) => {
   );
 };
 
-function EvMotorDashboard() {
+function EvMotorDashboard({ onAlertChange, registerMitigation }) {
 
 
   // Sidebar open/collapse state
@@ -781,7 +781,61 @@ function EvMotorDashboard() {
     statusText = `Warning Alert: ${statorTemp >= 80.0 || rotorTemp >= 95.0 ? "High Thermal Load Detected" : "Elevated Stress"}`;
   }
 
+  // Notify parent of alert status change
+  useEffect(() => {
+    if (onAlertChange) {
+      onAlertChange(statusClass, statusText);
+    }
+  }, [statusClass, statusText, onAlertChange]);
+
+  // Register the autonomous mitigation function
+  useEffect(() => {
+    if (registerMitigation) {
+      registerMitigation(() => {
+        // AI Autonomous Mitigation: cooling down temperatures, reducing load
+        setIsRunning(false);
+        setAccelerator(0);
+        setBrake(0);
+        
+        // Slowly reduce temps to baseline and restore health to 100
+        let currentStator = statorTemp;
+        let currentRotor = rotorTemp;
+        let currentBearing = bearingTemp;
+        let currentHealth = health;
+        
+        const interval = setInterval(() => {
+          let updated = false;
+          if (currentStator > 25.0) {
+            currentStator = Math.max(25.0, currentStator - 15);
+            setStatorTemp(currentStator);
+            updated = true;
+          }
+          if (currentRotor > 25.0) {
+            currentRotor = Math.max(25.0, currentRotor - 20);
+            setRotorTemp(currentRotor);
+            updated = true;
+          }
+          if (currentBearing > 25.0) {
+            currentBearing = Math.max(25.0, currentBearing - 10);
+            setBearingTemp(currentBearing);
+            updated = true;
+          }
+          if (currentHealth < 100.0) {
+            currentHealth = Math.min(100.0, currentHealth + 10);
+            setHealth(currentHealth);
+            updated = true;
+          }
+          
+          if (!updated) {
+            clearInterval(interval);
+          }
+        }, 150);
+      });
+    }
+  }, [registerMitigation, statorTemp, rotorTemp, bearingTemp, health]);
+
   return (
+
     <div className="motor-layout">
       {/* Collapsible Sidebar for Controls */}
       <div className={`motor-sidebar-wrapper ${isCollapsed ? "collapsed" : ""}`}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import TyreViewer from "./components/TyreViewer";
 import StatusPanel from "./components/StatusPanel";
 import InspectionImages from "./components/InspectionImages";
@@ -6,6 +6,7 @@ import HydraulicHealthPanel from "./components/HydraulicHealthPanel";
 import EvMotorDashboard from "./components/EvMotorDashboard";
 import ThreeBackground from "./components/ThreeBackground";
 import VehicleChatbot from "./components/VehicleChatbot";
+import AiAgentOverlay from "./components/AiAgentOverlay";
 import "./App.css";
 
 
@@ -15,6 +16,67 @@ function App() {
   const [activeTwin, setActiveTwin] = useState("tyre"); // 'tyre' or 'motor'
   const [time, setTime] = useState("");
   const [isSimulated, setIsSimulated] = useState(false);
+
+  // AI Safety Agent states
+  const [aiAgentActive, setAiAgentActive] = useState(false);
+  const [aiAgentSource, setAiAgentSource] = useState(""); // 'tyre' or 'motor'
+  const [aiAgentReason, setAiAgentReason] = useState("");
+  const [overrideActive, setOverrideActive] = useState(false);
+  const [lastMitigatedAt, setLastMitigatedAt] = useState(0);
+
+  const motorMitigationRef = useRef(null);
+
+  // Tyre anomaly safety trigger effect
+  useEffect(() => {
+    if (!data || overrideActive || aiAgentActive) return;
+    
+    // Check if Tyre twin is warning/critical
+    if (data.severity && data.severity !== "Normal") {
+      // Avoid looping triggers immediately after mitigation
+      if (Date.now() - lastMitigatedAt < 10000) return;
+
+      setAiAgentSource("tyre");
+      setAiAgentReason(`Tyre Alert Detected: Severity Level: ${data.severity}, Risk Level: ${data.risk_level}. AI safety lock engaged.`);
+      setAiAgentActive(true);
+    }
+  }, [data, overrideActive, aiAgentActive, lastMitigatedAt]);
+
+  const handleMitigate = () => {
+    if (aiAgentSource === "motor" && motorMitigationRef.current) {
+      motorMitigationRef.current();
+    } else if (aiAgentSource === "tyre") {
+      // Simulate Tyre calibration
+      setData(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          severity: "Normal",
+          risk_level: "Low",
+          risk_score: 5,
+          health_score: 98,
+          recommendations: [
+            "Maintain current tyre inflation (32 PSI). Check weekly.",
+            "Inspect tread depth periodically.",
+            "Ensure alignment is checked every 10,000 km."
+          ]
+        };
+      });
+    }
+    setLastMitigatedAt(Date.now());
+  };
+
+  const handleOverride = () => {
+    setOverrideActive(true);
+    setAiAgentActive(false);
+    // Automatically reset override after 40 seconds to allow safety re-engagement
+    setTimeout(() => {
+      setOverrideActive(false);
+    }, 40000);
+  };
+
+  const handleClose = () => {
+    setAiAgentActive(false);
+  };
 
   // Clock effect
   useEffect(() => {
@@ -183,9 +245,32 @@ function App() {
           </section>
         </main>
       ) : (
-        <EvMotorDashboard />
+        <EvMotorDashboard 
+          onAlertChange={(statusClass, statusText) => {
+            if (overrideActive || aiAgentActive) return;
+            if (statusClass === "warning" || statusClass === "critical") {
+              if (Date.now() - lastMitigatedAt < 10000) return;
+              
+              setAiAgentSource("motor");
+              setAiAgentReason(statusText);
+              setAiAgentActive(true);
+            }
+          }}
+          registerMitigation={(mitigateFn) => {
+            motorMitigationRef.current = mitigateFn;
+          }}
+        />
       )}
       <VehicleChatbot />
+      {aiAgentActive && (
+        <AiAgentOverlay
+          source={aiAgentSource}
+          reason={aiAgentReason}
+          onMitigate={handleMitigate}
+          onOverride={handleOverride}
+          onClose={handleClose}
+        />
+      )}
     </div>
   );
 }
