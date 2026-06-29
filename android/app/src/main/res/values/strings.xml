@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">IIT Digital Twin</string>
-    <string name="title_activity_main">IIT Digital Twin</string>
+    <string name="app_name">AEGIS</string>
+    <string name="title_activity_main">AEGIS</string>
     <string name="package_name">com.iit.digitaltwin</string>
     <string name="custom_url_scheme">com.iit.digitaltwin</string>
 </resources>

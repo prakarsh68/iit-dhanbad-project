@@ -9,7 +9,7 @@ function Navbar() {
         fontWeight: "bold",
       }}
     >
-      IIT Tyre Digital Twin
+      AEGIS: An Intelligent Digital Twin Framework for Vehicle Health Monitoring and Predictive Maintenance
     </div>
   );
 }

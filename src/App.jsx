@@ -204,8 +204,8 @@ function App() {
         <div className="background-grid"></div>
         <div className="state-screen">
           <span className="dot"></span>
-          <h2>Loading Digital Twin…</h2>
-          <p>Connecting to inspection backend</p>
+          <h2>Loading AEGIS…</h2>
+          <p>An Intelligent Digital Twin Framework for Vehicle Health Monitoring and Predictive Maintenance</p>
         </div>
       </div>
     );
@@ -219,8 +219,8 @@ function App() {
 
       <header className="header">
         <div className="header-title">
-          <h1>{activeTwin === "tyre" ? "TYRE AI" : "EV MOTOR AI"}</h1>
-          <p>{activeTwin === "tyre" ? "AI Powered Tyre Digital Twin" : "AI Powered EV Motor Digital Twin"}</p>
+          <h1>AEGIS</h1>
+          <p>An Intelligent Digital Twin Framework for Vehicle Health Monitoring and Predictive Maintenance</p>
         </div>
 
         <div className="header-navigation">

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # BACKEND SERVICE (FastAPI / Tyre Analysis)
+  # ==========================================
+  backend:
+    build:
+      context: ../IIT_Project
+      dockerfile: Dockerfile
+    container_name: aegis-backend
+    ports:
+      - "7860:7860"
+    environment:
+      - PORT=7860
+    volumes:
+      - ../IIT_Project/data:/app/data
+    restart: unless-stopped
+
+  # ==========================================
+  # FRONTEND SERVICE (React / Nginx Web App)
+  # ==========================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Point the frontend build to our local backend exposed port
+        - VITE_API_BASE_URL=http://localhost:7860
+        - VITE_MOTOR_API_BASE_URL=https://ev-motor-digital-twin-api.onrender.com
+        - VITE_APP_API_KEY
+        - VITE_GEMINI_API_KEY
+        - VITE_HYDRAULIC_API_KEY
+    container_name: aegis-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
