@@ -12,11 +12,11 @@ AEGIS utilizes a multi-container stack inside a unified Docker network:
 
 ```mermaid
 graph TD
-    ClientBrowser[User's Browser (localhost:3000)]
+    ClientBrowser["User's Browser (localhost:3000)"]
     
-    subgraph DockerNetwork [Docker Internal Bridge Network]
-        NginxServer[Nginx Web Server (Frontend Container)]
-        FastApiServer[FastAPI App (Backend Container:7860)]
+    subgraph DockerNetwork ["Docker Internal Bridge Network"]
+        NginxServer["Nginx Web Server (Frontend Container)"]
+        FastApiServer["FastAPI App (Backend Container:7860)"]
     end
 
     ClientBrowser -->|HTTP/WebSockets| NginxServer
