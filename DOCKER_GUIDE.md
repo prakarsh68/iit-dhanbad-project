@@ -44,9 +44,7 @@ Once the containers are successfully launched, you can access the application in
 
 ### Changing Build-time API Endpoints
 
-The React frontend embeds environment variables during compilation. By default, the `docker-compose.yml` configures the frontend to talk to the local backend running inside Docker at `http://localhost:7860`.
-
-If you wish to change these endpoints, edit the `args` section in `docker-compose.yml` before running the build command:
+The React frontend embeds environment variables during compilation. By default, the `docker-compose.yml` configures the frontend to use a relative reverse proxy endpoint `/api` for the Tyre AI backend:
 
 ```yaml
 frontend:
@@ -54,10 +52,12 @@ frontend:
     context: .
     dockerfile: Dockerfile
     args:
-      - VITE_API_BASE_URL=http://localhost:7860  # Point to local or remote Tyre API
+      - VITE_API_BASE_URL=/api  # Points to Nginx reverse proxy which routes internally to http://backend:7860
       - VITE_MOTOR_API_BASE_URL=https://ev-motor-digital-twin-api.onrender.com
       - VITE_APP_API_KEY=your_key_here
 ```
+
+Under this configuration, Nginx runs inside the frontend container and reverse-proxies all client-side requests from `/api/*` directly to `http://backend:7860/` using Docker's internal DNS network. This avoids CORS issues and ensures that the client's browser does not need to connect to a hardcoded backend hostname directly.
 
 ### Data Persistence
 
