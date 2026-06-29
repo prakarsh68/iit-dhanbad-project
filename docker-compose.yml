@@ -15,6 +15,11 @@ services:
       - PORT=7860
     volumes:
       - ../IIT_Project/data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:7860/')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: unless-stopped
 
   # ==========================================
@@ -25,8 +30,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        # Point the frontend build to our local backend exposed port
-        - VITE_API_BASE_URL=http://localhost:7860
+        # Point the frontend build to our Nginx reverse proxy endpoint
+        - VITE_API_BASE_URL=/api
         - VITE_MOTOR_API_BASE_URL=https://ev-motor-digital-twin-api.onrender.com
         - VITE_APP_API_KEY
         - VITE_GEMINI_API_KEY
